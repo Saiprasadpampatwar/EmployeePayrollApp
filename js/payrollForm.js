@@ -139,6 +139,7 @@ const dateError = document.querySelector(".date-error");
 const save = () => {
   try{
     let employeePayrollData = createEmployeePayroll();
+    createAndUpdateStorage(employeePayrollData);
   }catch(e){
     return;
   }
@@ -177,6 +178,18 @@ const getSelectedValues = (propertyValue) => {
     if(items.checked) setItems.push(items.value);
   });
   return setItems;
+}
+
+function createAndUpdateStorage(employeePayrollData){
+  let employeePayrollList = JSON.parse(localStorage.getItem("EmployeePayrollList"));
+  
+  if(employeePayrollList != undefined){
+    employeePayrollList.push(employeePayrollData);
+  }else{
+    employeePayrollList = [employeePayrollList]
+  }
+  alert(employeePayrollList.toString());
+  localStorage.setItem("EmployeePayrollList". JSON.stringify(employeePayrollList))
 }
 
 const isLeapYear = (year) => {
