@@ -1,11 +1,20 @@
+let employeePayrollList;
 window.addEventListener('DOMContentLoaded', (event) => {
+    employeePayrollList = getEmployeePayrollDataFromStorage();
+    document.querySelector('.emp-count').textContent = employeePayrollList.length;
     createInnerHtml();
+    localStorage.removeItem('editEmp');
 });
+
+const getEmployeePayrollDataFromStorage = () =>{
+    return localStorage.getItem('EmployeePayrollList') ? JSON.parse(localStorage.getItem('EmployeePayrollList')) : [];
+}
+
 
 const createInnerHtml = () => {
     const headerHtml = "<tr><th></th><th>Name</th><th>Gender</th><th>Department</th><th>Salary</th><th>StartDate</th><th>Actions</th></tr>";
     let innerHtml = `${headerHtml}`;
-    employeePayrollList = employeePayrollJSON();
+    if(employeePayrollList.length == 0) return;
     for(const empPayrollData of employeePayrollList){
         innerHtml = `${innerHtml}
         <tr> 
@@ -24,6 +33,7 @@ const createInnerHtml = () => {
     }
     document.querySelector('#table-display').innerHTML = innerHtml;
 }
+
 const getDeptHtml = (deptList) => {
     let deptHtml =``;
     for (const dept of deptList){
@@ -32,34 +42,5 @@ const getDeptHtml = (deptList) => {
     return deptHtml;
 }
 
-const employeePayrollJSON = () => {
-    let empPayrollListLocal = [
-        {
-            _name: 'Saiprasad Pampatwar',
-            _gender: 'male',
-            _department: [
-                'Engineering',
-                'Finance'
-            ],
-            _salary: '500000',
-            _startDate: '29 Oct 2019',
-            _note: '',
-            _id: new Date().getTime(),
-            _profilePic: '../assets/profile-images/Eclipse-2.png'
-        },
-        {
-            _name: 'Amarpa singh',
-            _gender: 'female',
-            _department: [
-                'Engineering',
-                'HR'
-            ],
-            _salary: '400000',
-            _startDate: '21 Oct 2019',
-            _note: '',
-            _id: new Date().getTime(),
-            _profilePic: '../assets/profile-images/Eclipse-1.png'
-        }
-    ];
-    return empPayrollListLocal;
-}
+
+
