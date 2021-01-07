@@ -60,18 +60,10 @@ class EmployeePayrollData {
       this._note = note;
     }
 
-    get startDate() {
-        return this._startDate;
-    }
-    set startDate(startDate) {
-        if (startDate != undefined) {
-            if (startDate <= new Date()) {
-                const options = { year: "numeric", month: "long", day: "numeric" };
-                const employeeDate = startDate.toLocaleDateString("en-US", options);
-                this._startDate = employeeDate;
-            }
-            else throw " Please select the valid date!";
-        }
+    get startDate() { return this._startDate}
+    set startDate(startDate){
+            startDate = new Date(startDate);
+            this._startDate = startDate;
     }
     toString() {
         return " Name: " + this.name + " Salary: " + this.salary + " Gender: " + this.gender + " Start Date: " + this.startDate + "Department: " + this.department+
@@ -158,10 +150,9 @@ const createEmployeePayroll = () => {
   employeePayrollData.department = getSelectedValues('[name=department]');
   employeePayrollData.salary = getInputValueById('#salary');
   employeePayrollData.note = getInputValueById('#notes');
-  let day= getInputValueById('#day');
-  let month = getInputValueById('#month');
-  let year = getInputValueById('#year');
-  employeePayrollData.startDate = new Date(year, month, day);
+  let date = getInputValueById('#day') + " " + getInputValueById('#month') + " " +
+               getInputValueById('#year');
+  employeePayrollData.startDate = Date.parse(date);
   alert(employeePayrollData.toString());
   return employeePayrollData;
 }
