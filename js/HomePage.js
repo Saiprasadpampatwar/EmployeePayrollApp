@@ -45,7 +45,7 @@ const employeePayrollJSON = () => {
             _startDate: '29 Oct 2019',
             _note: '',
             _id: new Date().getTime(),
-            _profilePic: '../assets/profile-images/Eclipse-2.png'
+            _profilePic: '../assets/profile-images/Ellipse -2.png'
         },
         {
             _name: 'Amarpa singh',
@@ -58,7 +58,7 @@ const employeePayrollJSON = () => {
             _startDate: '21 Oct 2019',
             _note: '',
             _id: new Date().getTime(),
-            _profilePic: '../assets/profile-images/Eclipse-1.png'
+            _profilePic: '../assets/profile-images/Ellipse -1.png'
         }
     ];
     return empPayrollListLocal;
