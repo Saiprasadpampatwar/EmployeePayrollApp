@@ -62,8 +62,11 @@ class EmployeePayrollData {
 
     get startDate() { return this._startDate}
     set startDate(startDate){
-            startDate = new Date(startDate);
-            this._startDate = startDate;
+      let now = new Date();
+      if(startDate>now) throw "startDate is future Date!";
+      var diff = Math.abs(now.getTime() - startDate.getTime());
+      if(diff/(1000*60*60*24) > 30) throw "StartDate is beyond 30 days!";
+      this._startDate = startDate;
     }
     toString() {
         return " Name: " + this.name + " Salary: " + this.salary + " Gender: " + this.gender + " Start Date: " + this.startDate + "Department: " + this.department+
@@ -76,19 +79,31 @@ let employeePayrollObj = {};
 
 window.addEventListener('DOMContentLoaded', (event) => {
   const name = document.querySelector('#name');
-  const textError = document.querySelector('.text-error');
   name.addEventListener('input', function () {
     if (name.value.length == 0) {
-      textError.textContent = "";
+      setTextValue('.text-error',"");
       return;
     }
     try {
       (new EmployeePayrollData()).name = name.value;
-      textError.textContent = "";
+      setTextValue('.text-error',"");
     } catch (e) {
-      textError.textContent = e;
+      setTextValue('.text-error',e);
     }
   });
+ 
+  const date = document.querySelector('#date')
+  date.addEventListener('input',function(){
+      let startDate = getInputValueById('#day') + " " + getInputValueById('#month') + " " +
+      getInputValueById('#year');
+      try {
+        (new EmployeePayrollData()).startDate = new Date(Date.parse(startDate));
+        setTextValue('.date-error',"");
+      } catch (e) {
+        setTextValue('.date-error',e);
+      }
+  });
+
 
   const salary = document.querySelector('#salary');
   const output = document.querySelector('.salary-output');
@@ -138,35 +153,7 @@ const setSelectedValues = (propertyValue, value) => {
 
 
 
-const day = document.querySelector("#day");
-const year = document.querySelector("#year");
-const month = document.querySelector("#month");
-const dateError = document.querySelector(".date-error");
-[day, month, year].forEach((item) =>
-  item.addEventListener("input", function () {
-    if (month.value == 1) {
-      if (isLeapYear(year.value)) {
-        if (day.value > 29) {
-          dateError.textContent = "Invalid Date!";
-        } else dateError.textContent = "";
-      } else {
-        if (day.value > 28) {
-          dateError.textContent = "Invalid Date!";
-        } else dateError.textContent = "";
-      }
-    }
-    if (
-      month.value == 3 ||
-      month.value == 5 ||
-      month.value == 8 ||
-      month.value == 10
-    ) {
-      if (day.value > 30) {
-        dateError.textContent = "Invalid Date!";
-      } else dateError.textContent = "";
-    }
-  })
-);
+
 
 const save = () => {
   try{
@@ -192,7 +179,7 @@ const createEmployeePayroll = () => {
   employeePayrollData.note = getInputValueById('#notes');
   let date = getInputValueById('#day') + " " + getInputValueById('#month') + " " +
                getInputValueById('#year');
-  employeePayrollData.startDate = Date.parse(date);
+  employeePayrollData.startDate = new Date(date);
   alert(employeePayrollData.toString());
   return employeePayrollData;
 }
@@ -238,6 +225,12 @@ const setValue = (id, value) => {
   element.value = value;
 }
 
+const setTextValue = (id, value) => {
+  const element = document.querySelector(id);
+  element.textContent= value;
+}
+
+
 const setSelectedIndex = (id, index) => {
   const element = document.querySelector(id);
   element.selectedIndex = index;
@@ -251,16 +244,3 @@ const unsetSelectedValues = (propertyValue) => {
 }
 
 
-const isLeapYear = (year) => {
-    let result = false;
-    if (year % 4 == 0) {
-      if (year % 100 == 0) {
-        if (year % 400 == 0) {
-          result = true;
-        }
-      } else {
-        result = true;
-      }
-    }
-    return result;
-  };
